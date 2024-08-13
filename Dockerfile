@@ -10,15 +10,14 @@ RUN apt update && apt install -y build-essential dpkg-dev libpulse-dev git autoc
 
 # xrdp image
 FROM ubuntu:22.04
-ARG ADDITIONAL_PACKAGES=""
 ENV DEBIAN_FRONTEND noninteractive
-RUN apt update && apt install -y software-properties-common apt-utils && \
-    add-apt-repository "deb http://archive.canonical.com/ $(lsb_release -sc) partner" && \
-    apt update && apt -y full-upgrade && apt install -y \
+RUN apt update && apt -y full-upgrade && apt install -y \
+    software-properties-common \
+    apt-utils \
     ca-certificates \
     lsb-release \
-    crudini \
     less \
+    crudini \
     locales \
     openssh-server \
     pulseaudio \
@@ -40,12 +39,13 @@ RUN apt update && apt install -y software-properties-common apt-utils && \
     xfce4-xkb-plugin \
     xorgxrdp \
     xprintidle \
-    xrdp && \
-    echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list && \
-    wget -qO- https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-    echo "deb https://mirrors.ustc.edu.cn/postgresql/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
-    wget -qO- https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
-    apt update && apt install -y \
+    xrdp \
+    language-pack-zh-hans \
+    *wqy* \
+    fcitx-googlepinyin \
+    fcitx-sunpinyin \
+    firefox \
+    vlc \
     telnet \
     iputils-ping \
     traceroute \
@@ -63,48 +63,50 @@ RUN apt update && apt install -y software-properties-common apt-utils && \
     tree \
     lrzsz \
     jq \
-    language-pack-zh-hans \
-    *wqy* \
-    fcitx-googlepinyin \
-    fcitx-sunpinyin \
-    firefox \
-    google-chrome-stable \
-    vlc \
-    ansible \
-    openjdk-11-jre \
     python3-venv \
-    python3-pip \
-    kafkacat \
-    postgresql-client-13 \
-    redis-tools \
-    mongodb-clients \
-    libaio1 \
-    libtinfo5 \
-    $ADDITIONAL_PACKAGES && \
+    python3-pip && \
     apt remove -y light-locker xscreensaver && \
     apt autoremove -y && \
     rm -rf /var/cache/apt /var/lib/apt/lists && \
     mkdir -p /var/lib/xrdp-pulseaudio-installer
 
 COPY --from=pulseaudiolib /pulseaudio-module-xrdp/src/.libs/*.so /var/lib/xrdp-pulseaudio-installer/
+
+#RUN wget -qO- https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+#    echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list && \
+#    wget -qO- https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
+#    echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
+#    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
+#    echo "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list && \
+#    apt update && apt install -y \
+#    ansible \
+#    openjdk-11-jdk \
+#    kafkacat \
+#    redis-tools \
+#    libaio1 \
+#    libtinfo5 \
+#    google-chrome-stable \
+#    postgresql-client-13 \
+#    #mongodb-clients \
+
 #ADD rootfs /
 ADD bin /usr/bin
 ADD etc /etc
 ADD autostart /etc/xdg/autostart
-#
-## Configure
-#RUN mkdir /var/run/dbus && \
-#    cp /etc/X11/xrdp/xorg.conf /etc/X11 && \
-#    sed -i "s/console/anybody/g" /etc/X11/Xwrapper.config && \
-#    sed -i "s/xrdp\/xorg/xorg/g" /etc/xrdp/sesman.ini && \
-#    locale-gen en_US.UTF-8 && \
-#    echo "pulseaudio -D --enable-memfd=True" > /etc/skel/.Xsession && \
-#    echo "xfce4-session" >> /etc/skel/.Xsession && \
-#    rm -rf /etc/ssh/ssh_host_* && \
-#    rm -rf /etc/xrdp/rsakeys.ini /etc/xrdp/*.pem
-#
-## Docker config
-#VOLUME ["/etc/ssh","/home"]
-#EXPOSE 3389 22
-#ENTRYPOINT ["/usr/bin/docker-entrypoint.sh"]
-#CMD ["supervisord"]
+
+# Configure
+RUN mkdir /var/run/dbus && \
+    cp /etc/X11/xrdp/xorg.conf /etc/X11 && \
+    sed -i "s/console/anybody/g" /etc/X11/Xwrapper.config && \
+    sed -i "s/xrdp\/xorg/xorg/g" /etc/xrdp/sesman.ini && \
+    locale-gen en_US.UTF-8 && \
+    echo "pulseaudio -D --enable-memfd=True" > /etc/skel/.Xsession && \
+    echo "xfce4-session" >> /etc/skel/.Xsession && \
+    rm -rf /etc/ssh/ssh_host_* && \
+    rm -rf /etc/xrdp/rsakeys.ini /etc/xrdp/*.pem
+
+# Docker config
+VOLUME ["/etc/ssh","/home"]
+EXPOSE 3389 22
+ENTRYPOINT ["/usr/bin/docker-entrypoint.sh"]
+CMD ["supervisord"]
