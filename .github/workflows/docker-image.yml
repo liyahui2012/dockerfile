@@ -22,4 +22,4 @@ jobs:
       with:
         context: .
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/github-action-test:${{ github.event.release.tag_name }}
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/github-action-test:${{ GITHUB_REF_NAME }}
