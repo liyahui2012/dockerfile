@@ -16,68 +16,68 @@ RUN apt install -y build-essential dpkg-dev libpulse-dev git autoconf libtool &&
 FROM base
 ARG ADDITIONAL_PACKAGES=""
 ENV DEBIAN_FRONTEND=noninteractive
-RUN echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list && \
-    wget -qO- https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-    echo "deb https://mirrors.ustc.edu.cn/postgresql/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
-    wget -qO- https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
-    apt update && apt install -y \
-    openssh-server \
-    crudini \
-    pulseaudio \
-    supervisor \
-    uuid-runtime \
-    xauth \
-    xautolock \
-    xfce4 \
-    xfce4-clipman-plugin \
-    xfce4-cpugraph-plugin \
-    xfce4-netload-plugin \
-    xfce4-screenshooter \
-    xfce4-taskmanager \
-    xfce4-terminal \
-    xfce4-xkb-plugin \
-    xorgxrdp \
-    xprintidle \
-    xrdp \
-    vim \
-    less \
-    locales \
-    iputils-ping \
-    traceroute \
-    telnet \
-    dialog \
-    dnsutils \
-    fuse \
-    libfuse2 \
-    iproute2 \
-    zsh \
-    zsh-syntax-highlighting \
-    tmux \
-    tree \
-    lrzsz \
-    jq \
-    language-pack-zh-hans \
-    *wqy* \
-    fcitx-googlepinyin \
-    fcitx-sunpinyin \
-    firefox \
-    google-chrome-stable \
-    vlc \
-    ansible \
-    openjdk-11-jdk \
-    python3-venv \
-    python3-pip \
-    kafkacat \
-    postgresql-client-13 \
-    redis-tools \
-    libaio1 \
-    libtinfo5 \
-    $ADDITIONAL_PACKAGES && \
-    apt remove -y light-locker xscreensaver && \
-    apt autoremove -y && \
-    mkdir -p /var/lib/xrdp-pulseaudio-installer
-
-COPY --from=pulseaudiolib /pulseaudio-module-xrdp/src/.libs/*.so /var/lib/xrdp-pulseaudio-installer/
+#RUN echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list && \
+#    wget -qO- https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+#    echo "deb https://mirrors.ustc.edu.cn/postgresql/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
+#    wget -qO- https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
+#    apt update && apt install -y \
+#    openssh-server \
+#    crudini \
+#    pulseaudio \
+#    supervisor \
+#    uuid-runtime \
+#    xauth \
+#    xautolock \
+#    xfce4 \
+#    xfce4-clipman-plugin \
+#    xfce4-cpugraph-plugin \
+#    xfce4-netload-plugin \
+#    xfce4-screenshooter \
+#    xfce4-taskmanager \
+#    xfce4-terminal \
+#    xfce4-xkb-plugin \
+#    xorgxrdp \
+#    xprintidle \
+#    xrdp \
+#    vim \
+#    less \
+#    locales \
+#    iputils-ping \
+#    traceroute \
+#    telnet \
+#    dialog \
+#    dnsutils \
+#    fuse \
+#    libfuse2 \
+#    iproute2 \
+#    zsh \
+#    zsh-syntax-highlighting \
+#    tmux \
+#    tree \
+#    lrzsz \
+#    jq \
+#    language-pack-zh-hans \
+#    *wqy* \
+#    fcitx-googlepinyin \
+#    fcitx-sunpinyin \
+#    firefox \
+#    google-chrome-stable \
+#    vlc \
+#    ansible \
+#    openjdk-11-jdk \
+#    python3-venv \
+#    python3-pip \
+#    kafkacat \
+#    postgresql-client-13 \
+#    redis-tools \
+#    libaio1 \
+#    libtinfo5 \
+#    $ADDITIONAL_PACKAGES && \
+#    apt remove -y light-locker xscreensaver && \
+#    apt autoremove -y && \
+#    mkdir -p /var/lib/xrdp-pulseaudio-installer
+#
+#COPY --from=pulseaudiolib /pulseaudio-module-xrdp/src/.libs/*.so /var/lib/xrdp-pulseaudio-installer/
 #ADD rootfs /
 #ADD bin /usr/bin
 #ADD etc /etc

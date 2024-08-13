@@ -2,7 +2,8 @@ name: Build and Push Docker Image to Docker Hub
 
 on:
   push:
-    branches: [ "main" ]
+    tags:
+    - "v*"
 
 jobs:
   build:
@@ -21,4 +22,4 @@ jobs:
       with:
         context: .
         push: true
-        tags: alvinleee/github-action-test:latest
+        tags: ${{secrets.DOCKERHUB_USERNAME}}/github-action-test:${{ github.ref }}
